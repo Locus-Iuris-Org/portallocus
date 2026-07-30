@@ -10,6 +10,7 @@ import { supabase } from '../lib/supabase'
  * - `usuarios.is_admin_tecnico` é um boolean na própria linha do usuário.
  */
 export function useAuth() {
+  const [sessao, setSessao] = useState(null)
   const [usuario, setUsuario] = useState(null)
   const [cargo, setCargo] = useState(null)
   const [carregando, setCarregando] = useState(true)
@@ -27,12 +28,15 @@ export function useAuth() {
       // Sem sessão: zera tudo.
       if (!session) {
         if (ativo) {
+          setSessao(null)
           setUsuario(null)
           setCargo(null)
           setCarregando(false)
         }
         return
       }
+
+      if (ativo) setSessao(session)
 
       // Linha do usuário + join com cargos (todas as permissões).
       const { data, error } = await supabase
@@ -71,5 +75,11 @@ export function useAuth() {
 
   const isAdmin = !!usuario?.is_admin_tecnico
 
-  return { usuario, cargo, isAdmin, carregando }
+  /**
+   * `sessao` é o login em si (Supabase Auth) e é o que decide se a
+   * pessoa entra no portal. `usuario`/`cargo` são a linha na tabela
+   * `usuarios` — servem para nome, avatar e permissões de EDIÇÃO, e
+   * podem faltar sem que isso barre o acesso.
+   */
+  return { sessao, usuario, cargo, isAdmin, carregando }
 }

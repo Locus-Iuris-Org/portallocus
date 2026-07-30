@@ -8,11 +8,9 @@ import Homepage from './pages/Homepage'
 import Area from './pages/Area'
 import Dashboard from './pages/Dashboard'
 import EmConstrucao from './pages/EmConstrucao'
-import AguardandoAcesso from './pages/AguardandoAcesso'
 import RotaProtegida from './components/RotaProtegida'
 import Carregando from './components/Carregando'
 import { AREAS } from './areas'
-import { useAuth } from './hooks/useAuth'
 
 /**
  * Telas com gráficos são carregadas só quando alguém as abre.
@@ -20,20 +18,6 @@ import { useAuth } from './hooks/useAuth'
  * usa a Homepage não tem por que baixá-la junto com o portal.
  */
 const Diretoria = lazy(() => import('./pages/mercado/Diretoria'))
-
-// Decide qual tela mostrar para quem já está autenticado.
-function Home() {
-  const { cargo, carregando } = useAuth()
-
-  if (carregando) {
-    return null
-  }
-
-  // Premissa: cargo.nome === 'Sem acesso' bloqueia o acesso (cargo nulo também).
-  const cargoSemAcesso = !cargo || cargo.nome === 'Sem acesso'
-
-  return cargoSemAcesso ? <AguardandoAcesso /> : <Homepage />
-}
 
 // Envelope curto para não repetir <RotaProtegida> em toda rota.
 function protegida(tela) {
@@ -62,7 +46,9 @@ export default function App() {
           <Route path="/esqueci-senha" element={<EsqueciSenha />} />
           <Route path="/redefinir-senha" element={<RedefinirSenha />} />
 
-          <Route path="/" element={protegida(<Home />)} />
+          {/* Todo mundo logado cai direto na Homepage, sem filtro
+              de cargo. */}
+          <Route path="/" element={protegida(<Homepage />)} />
 
           {/* As rotas das áreas e subáreas saem do mapa em src/areas.js.
               Cada área vira /slug, e cada subárea vira /slug/subslug —
