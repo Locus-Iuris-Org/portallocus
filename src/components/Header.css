@@ -1,0 +1,134 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: var(--altura-header);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 32px;
+  background: var(--branco);
+  box-shadow: var(--sombra-header);
+}
+
+@media (max-width: 640px) {
+  .header {
+    padding: 0 16px;
+  }
+}
+
+/* O logoportal.png tem muita margem branca em volta da marca.
+   Esta "janela" recorta só a arte e a deixa com 36px de altura.
+   Se o PNG for reexportado já recortado, troque isto por um <img height="36">. */
+.header__logo {
+  position: relative;
+  height: 36px;
+  width: 87px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.header__logo img {
+  position: absolute;
+  top: -35px;
+  left: -37px;
+  width: 182px;
+  height: 102px;
+  max-width: none;
+}
+
+/* --- Avatar + dropdown --- */
+
+.header__conta {
+  position: relative;
+}
+
+.header__avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  background: var(--primaria);
+  color: var(--texto);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.header__avatar:hover {
+  box-shadow: 0 0 0 4px rgba(212, 180, 41, 0.22);
+}
+
+.header__avatar:focus-visible {
+  outline: 2px solid var(--texto);
+  outline-offset: 2px;
+}
+
+.header__menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 190px;
+  padding: 6px;
+  background: var(--branco);
+  border: 1px solid rgba(26, 29, 35, 0.08);
+  border-radius: 12px;
+  box-shadow: var(--sombra-menu);
+  display: flex;
+  flex-direction: column;
+  animation: header-menu-entra 0.14s ease-out;
+}
+
+@keyframes header-menu-entra {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+.header__item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--texto);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.header__item:hover {
+  background: rgba(212, 180, 41, 0.14);
+}
+
+.header__item:focus-visible {
+  outline: 2px solid var(--primaria);
+  outline-offset: -2px;
+}
+
+.header__separador {
+  height: 1px;
+  margin: 6px 8px;
+  background: rgba(26, 29, 35, 0.08);
+}
+
+.header__item--sair {
+  color: #b4231f;
+}
+
+.header__item--sair:hover {
+  background: rgba(180, 35, 31, 0.09);
+}

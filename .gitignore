@@ -29,3 +29,7 @@ dist-ssr
 *.sw?
 
 .vercel
+
+# Lixo do OneDrive/Windows
+desktop.ini
+Thumbs.db

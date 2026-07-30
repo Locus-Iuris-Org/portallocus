@@ -1,0 +1,163 @@
+/* O fundo em gradiente vem da classe .fundo-portal (src/index.css). */
+
+.home__conteudo {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 72px 32px 96px;
+}
+
+@media (max-width: 640px) {
+  .home__conteudo {
+    padding: 48px 20px 64px;
+  }
+}
+
+/* --- Cabeçalho da página --- */
+
+.home__saudacao {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--texto-suave);
+  margin-bottom: 14px;
+}
+
+.home__titulo {
+  font-size: 60px;
+  font-weight: 300;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  margin-bottom: 20px;
+}
+
+.home__titulo strong {
+  display: block;
+  font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  .home__titulo {
+    font-size: 38px;
+  }
+}
+
+.home__subtitulo {
+  font-size: 17px;
+  color: var(--texto-suave);
+  max-width: 46ch;
+}
+
+.home__divisor {
+  height: 1px;
+  margin: 44px 0 36px;
+  background: linear-gradient(
+    90deg,
+    rgba(26, 29, 35, 0.16),
+    rgba(26, 29, 35, 0)
+  );
+}
+
+/* --- Grade de cards --- */
+
+.home__grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 26px 24px 24px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  box-shadow: var(--sombra-card);
+  backdrop-filter: blur(8px);
+  overflow: hidden;
+  transition: transform 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
+}
+
+/* Fio dourado no topo, que acende no hover. */
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--primaria);
+  opacity: 0;
+  transition: opacity 0.22s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: var(--sombra-card-hover);
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--texto);
+  outline-offset: 3px;
+}
+
+.card__icone {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 11px;
+  background: rgba(212, 180, 41, 0.18);
+  color: var(--texto);
+  margin-bottom: 4px;
+}
+
+.card__titulo {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.card__descricao {
+  font-size: 14.5px;
+  line-height: 1.45;
+  color: var(--texto-suave);
+}
+
+.card__seta {
+  margin-top: auto;
+  padding-top: 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--primaria);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.card__seta span {
+  transition: transform 0.22s ease;
+}
+
+.card:hover .card__seta span {
+  transform: translateX(4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .card__seta span {
+    transition: none;
+  }
+  .card:hover {
+    transform: none;
+  }
+}

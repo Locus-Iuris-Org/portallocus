@@ -1,0 +1,87 @@
+/* O fundo em gradiente vem da classe .fundo-portal (src/index.css). */
+
+.obra {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 20px;
+  min-height: calc(100svh - var(--altura-header));
+}
+
+.obra__card {
+  width: 100%;
+  max-width: 480px;
+  padding: 40px 32px 32px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 18px;
+  box-shadow: var(--sombra-card);
+  backdrop-filter: blur(8px);
+}
+
+.obra__icone {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+  background: rgba(212, 180, 41, 0.18);
+  color: var(--texto);
+}
+
+.obra__selo {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--primaria);
+  margin-bottom: 10px;
+}
+
+.obra__titulo {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.obra__texto {
+  font-size: 15.5px;
+  line-height: 1.5;
+  color: var(--texto-suave);
+  margin-bottom: 28px;
+}
+
+.obra__voltar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 22px;
+  border-radius: 10px;
+  background: var(--primaria);
+  color: var(--texto);
+  font-size: 14.5px;
+  font-weight: 600;
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.obra__voltar:hover {
+  filter: brightness(1.07);
+  transform: translateY(-1px);
+}
+
+.obra__voltar:focus-visible {
+  outline: 2px solid var(--texto);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .obra__voltar {
+    transition: none;
+  }
+  .obra__voltar:hover {
+    transform: none;
+  }
+}
