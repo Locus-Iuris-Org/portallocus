@@ -63,6 +63,10 @@ export default function Login() {
         </button>
 
         <p style={estilos.rodape}>
+          <Link to="/esqueci-senha">Esqueci minha senha</Link>
+        </p>
+
+        <p style={estilos.rodape}>
           Não tem conta? <Link to="/cadastro">Criar conta</Link>
         </p>
       </form>

@@ -2,62 +2,45 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 
-const DOMINIO_PERMITIDO = '@locusiuris.com.br'
-// Mesma lógica do reset de senha: segue o ambiente em que o app está rodando.
-const URL_CONFIRMACAO = `${window.location.origin}/login`
+// Usa a origem atual (localhost, preview ou produção) para não precisar
+// trocar de URL entre ambientes. Todas precisam estar na lista de
+// Redirect URLs do painel do Supabase.
+const URL_REDEFINICAO = `${window.location.origin}/redefinir-senha`
 
-export default function Cadastro() {
-  const [nome, setNome] = useState('')
+export default function EsqueciSenha() {
   const [email, setEmail] = useState('')
-  const [senha, setSenha] = useState('')
-  const [confirmarSenha, setConfirmarSenha] = useState('')
   const [erro, setErro] = useState('')
-  const [sucesso, setSucesso] = useState(false)
+  const [enviado, setEnviado] = useState(false)
   const [enviando, setEnviando] = useState(false)
 
   async function handleSubmit(e) {
     e.preventDefault()
     setErro('')
-
-    // Validação de domínio ANTES de qualquer chamada ao Supabase.
-    if (!email.trim().toLowerCase().endsWith(DOMINIO_PERMITIDO)) {
-      setErro(`Cadastro permitido apenas com email corporativo terminado em ${DOMINIO_PERMITIDO}.`)
-      return
-    }
-
-    if (senha !== confirmarSenha) {
-      setErro('As senhas não coincidem.')
-      return
-    }
-
     setEnviando(true)
 
-    const { error } = await supabase.auth.signUp({
-      email: email.trim(),
-      password: senha,
-      options: {
-        data: { nome_completo: nome.trim() },
-        emailRedirectTo: URL_CONFIRMACAO,
-      },
+    const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+      redirectTo: URL_REDEFINICAO,
     })
 
     setEnviando(false)
 
+    // O Supabase não diferencia email inexistente (evita enumeração de contas);
+    // erro aqui é problema real, tipo limite de envio atingido.
     if (error) {
       setErro(error.message)
       return
     }
 
-    setSucesso(true)
+    setEnviado(true)
   }
 
-  if (sucesso) {
+  if (enviado) {
     return (
       <div style={estilos.container}>
         <div style={estilos.card}>
-          <h1 style={estilos.titulo}>Conta criada!</h1>
+          <h1 style={estilos.titulo}>Verifique seu email</h1>
           <p style={estilos.texto}>
-            Verifique seu email para confirmar o acesso.
+            Se o email existir, você receberá um link para redefinir sua senha.
           </p>
           <p style={estilos.rodape}>
             <Link to="/login">Voltar para o login</Link>
@@ -70,18 +53,10 @@ export default function Cadastro() {
   return (
     <div style={estilos.container}>
       <form onSubmit={handleSubmit} style={estilos.card}>
-        <h1 style={estilos.titulo}>Criar conta</h1>
-
-        <label style={estilos.label}>
-          Nome completo
-          <input
-            type="text"
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
-            required
-            style={estilos.input}
-          />
-        </label>
+        <h1 style={estilos.titulo}>Esqueci minha senha</h1>
+        <p style={estilos.texto}>
+          Informe seu email e enviaremos um link para criar uma nova senha.
+        </p>
 
         <label style={estilos.label}>
           Email
@@ -90,28 +65,7 @@ export default function Cadastro() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            style={estilos.input}
-          />
-        </label>
-
-        <label style={estilos.label}>
-          Senha
-          <input
-            type="password"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-            required
-            style={estilos.input}
-          />
-        </label>
-
-        <label style={estilos.label}>
-          Confirmar senha
-          <input
-            type="password"
-            value={confirmarSenha}
-            onChange={(e) => setConfirmarSenha(e.target.value)}
-            required
+            autoComplete="email"
             style={estilos.input}
           />
         </label>
@@ -119,11 +73,11 @@ export default function Cadastro() {
         {erro && <p style={estilos.erro}>{erro}</p>}
 
         <button type="submit" disabled={enviando} style={estilos.botao}>
-          {enviando ? 'Criando...' : 'Criar conta'}
+          {enviando ? 'Enviando...' : 'Enviar link de redefinição'}
         </button>
 
         <p style={estilos.rodape}>
-          Já tem conta? <Link to="/login">Voltar para o login</Link>
+          <Link to="/login">Voltar para o login</Link>
         </p>
       </form>
     </div>
