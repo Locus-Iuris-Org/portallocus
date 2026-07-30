@@ -1,13 +1,33 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 
+/**
+ * O link de recuperação pode cair aqui em vez de /redefinir-senha quando o
+ * Supabase usa a Site URL do projeto. O token vem no hash (implicit flow) ou
+ * na query (PKCE/verify), então olhamos os dois.
+ */
+function temRecoveryNaUrl() {
+  const hash = new URLSearchParams(window.location.hash.replace(/^#/, ''))
+  const query = new URLSearchParams(window.location.search)
+  return hash.get('type') === 'recovery' || query.get('type') === 'recovery'
+}
+
 export default function Login() {
   const navigate = useNavigate()
+  // Lido na montagem, antes do primeiro render, para não piscar o formulário.
+  const [recovery] = useState(temRecoveryNaUrl)
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
   const [erro, setErro] = useState('')
   const [enviando, setEnviando] = useState(false)
+
+  useEffect(() => {
+    if (!recovery) return
+    // Leva search e hash intactos: quem valida o token é a tela de redefinição.
+    const { search, hash } = window.location
+    navigate(`/redefinir-senha${search}${hash}`, { replace: true })
+  }, [recovery, navigate])
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -27,6 +47,11 @@ export default function Login() {
     }
 
     navigate('/')
+  }
+
+  // Redirecionando: não renderiza o login para não confundir o usuário.
+  if (recovery) {
+    return null
   }
 
   return (
