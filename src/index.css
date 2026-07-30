@@ -20,6 +20,15 @@
 
   --altura-header: 64px;
 
+  /* Tema padrão (amarelo). Uma classe tema-* na tela troca estes
+     valores — ver bloco "TEMAS DE COR POR ÁREA" mais abaixo. */
+  --grad-1: #fff8e7;
+  --grad-2: #fdefc6;
+  --grad-3: #f5c842;
+  --area: #d4b429;
+  --area-forte: #8a7318;
+  --area-suave: rgba(212, 180, 41, 0.18);
+
   font-family: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
   font-size: 16px;
   line-height: 1.5;
@@ -61,18 +70,71 @@ a {
   text-decoration: none;
 }
 
-/* Fundo padrão das telas internas do portal: gradiente diagonal
-   creme -> dourado, com um brilho radial ao centro para o amarelo
-   não "chapar" na tela inteira. Fica abaixo do header fixo. */
+/* ---------------------------------------------------------------
+   TEMAS DE COR POR ÁREA
+
+   Cada área do portal tem sua cor. A classe tema-* troca as
+   variáveis abaixo, e o fundo + os cards se pintam sozinhos.
+   Para mudar a cor de uma área, mexa aqui; para escolher qual área
+   usa qual tema, mexa em src/areas.js.
+
+     --grad-1/2/3 -> as três paradas do gradiente de fundo
+     --area       -> cor cheia (fio de cima do card)
+     --area-forte -> versão escurecida, usada em TEXTO e ícone
+                     (a cor cheia não tem contraste suficiente
+                      sobre o branco do card)
+     --area-suave -> fundo do quadradinho do ícone
+   --------------------------------------------------------------- */
+
+.tema-amarelo {
+  --grad-1: #fff8e7;
+  --grad-2: #fdefc6;
+  --grad-3: #f5c842;
+  --area: #d4b429;
+  --area-forte: #8a7318;
+  --area-suave: rgba(212, 180, 41, 0.18);
+}
+
+.tema-vermelho {
+  --grad-1: #fff0f0;
+  --grad-2: #ffd9d8;
+  --grad-3: #e53935;
+  --area: #e53935;
+  --area-forte: #c0272d;
+  --area-suave: rgba(229, 57, 53, 0.14);
+}
+
+.tema-verde {
+  --grad-1: #f0fff4;
+  --grad-2: #d5eeda;
+  --grad-3: #2e7d32;
+  --area: #2e7d32;
+  --area-forte: #276b2a;
+  --area-suave: rgba(46, 125, 50, 0.14);
+}
+
+.tema-azul {
+  --grad-1: #f0f4ff;
+  --grad-2: #d7e3f8;
+  --grad-3: #1565c0;
+  --area: #1565c0;
+  --area-forte: #12539e;
+  --area-suave: rgba(21, 101, 192, 0.13);
+}
+
+/* Fundo padrão das telas internas: gradiente diagonal do tom claro
+   para o tom forte da área, com um brilho radial ao centro para a
+   cor não "chapar" na tela inteira. Fica abaixo do header fixo.
+   Sem classe tema-*, cai no amarelo. */
 .fundo-portal {
   min-height: 100svh;
   padding-top: var(--altura-header);
   background:
     radial-gradient(
       120% 90% at 50% 30%,
-      rgba(255, 255, 255, 0.55) 0%,
-      rgba(255, 255, 255, 0) 60%
+      rgba(255, 255, 255, 0.62) 0%,
+      rgba(255, 255, 255, 0) 62%
     ),
-    linear-gradient(135deg, var(--creme) 0%, #fdefc6 45%, var(--dourado) 100%);
+    linear-gradient(135deg, var(--grad-1) 0%, var(--grad-2) 45%, var(--grad-3) 100%);
   background-attachment: fixed;
 }

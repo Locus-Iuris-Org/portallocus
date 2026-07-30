@@ -1,0 +1,85 @@
+/* O fundo em gradiente vem de .fundo-portal + tema-* (src/index.css). */
+
+.area__conteudo {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 40px 32px 96px;
+}
+
+@media (max-width: 640px) {
+  .area__conteudo {
+    padding: 28px 20px 64px;
+  }
+}
+
+.area__voltar {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 28px;
+  padding: 8px 15px 8px 12px;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: var(--sombra-card);
+  backdrop-filter: blur(8px);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--texto);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.area__voltar:hover {
+  background: rgba(255, 255, 255, 0.95);
+  transform: translateX(-2px);
+}
+
+.area__voltar:focus-visible {
+  outline: 2px solid var(--texto);
+  outline-offset: 3px;
+}
+
+.area__titulo {
+  font-size: 52px;
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  margin-bottom: 12px;
+}
+
+@media (max-width: 640px) {
+  .area__titulo {
+    font-size: 36px;
+  }
+}
+
+.area__subtitulo {
+  font-size: 17px;
+  color: var(--texto-suave);
+  max-width: 48ch;
+}
+
+.area__divisor {
+  height: 1px;
+  margin: 36px 0 32px;
+  background: linear-gradient(
+    90deg,
+    rgba(26, 29, 35, 0.18),
+    rgba(26, 29, 35, 0)
+  );
+}
+
+.area__grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .area__voltar {
+    transition: none;
+  }
+  .area__voltar:hover {
+    transform: none;
+  }
+}

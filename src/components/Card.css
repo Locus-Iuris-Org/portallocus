@@ -1,0 +1,95 @@
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 26px 24px 24px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  box-shadow: var(--sombra-card);
+  backdrop-filter: blur(8px);
+  overflow: hidden;
+  transition: transform 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
+}
+
+/* Fio colorido no topo, que acende no hover com a cor da área. */
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--area);
+  opacity: 0;
+  transition: opacity 0.22s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: var(--sombra-card-hover);
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--texto);
+  outline-offset: 3px;
+}
+
+.card__icone {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 11px;
+  background: var(--area-suave);
+  color: var(--area-forte);
+  margin-bottom: 4px;
+}
+
+.card__titulo {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.card__descricao {
+  font-size: 14.5px;
+  line-height: 1.45;
+  color: var(--texto-suave);
+}
+
+.card__seta {
+  margin-top: auto;
+  padding-top: 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--area-forte);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.card__seta span {
+  transition: transform 0.22s ease;
+}
+
+.card:hover .card__seta span {
+  transform: translateX(4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .card__seta span {
+    transition: none;
+  }
+  .card:hover {
+    transform: none;
+  }
+}
