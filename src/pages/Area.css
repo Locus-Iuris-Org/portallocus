@@ -12,32 +12,8 @@
   }
 }
 
-.area__voltar {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  margin-bottom: 28px;
-  padding: 8px 15px 8px 12px;
-  border-radius: 9px;
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  box-shadow: var(--sombra-card);
-  backdrop-filter: blur(8px);
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--texto);
-  transition: background 0.2s ease, transform 0.2s ease;
-}
-
-.area__voltar:hover {
-  background: rgba(255, 255, 255, 0.95);
-  transform: translateX(-2px);
-}
-
-.area__voltar:focus-visible {
-  outline: 2px solid var(--texto);
-  outline-offset: 3px;
-}
+/* O botão .area__voltar é compartilhado com outras telas e mora
+   em src/index.css. */
 
 .area__titulo {
   font-size: 52px;

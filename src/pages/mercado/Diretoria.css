@@ -1,0 +1,484 @@
+/* Tela Mercado Diretoria. O fundo vem de .fundo-portal + .tema-vermelho. */
+
+.diretoria {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 40px 32px 96px;
+}
+
+@media (max-width: 640px) {
+  .diretoria {
+    padding: 28px 16px 64px;
+  }
+}
+
+.diretoria__titulo {
+  font-size: 46px;
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 640px) {
+  .diretoria__titulo {
+    font-size: 32px;
+  }
+}
+
+.diretoria__subtitulo {
+  font-size: 16.5px;
+  color: var(--texto-suave);
+  margin-bottom: 32px;
+}
+
+/* --- Painel: a moldura de vidro fosco de cada bloco ----------------- */
+
+.painel {
+  position: relative;
+  padding: 24px;
+  margin-bottom: 20px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  box-shadow: var(--sombra-card);
+  backdrop-filter: blur(8px);
+}
+
+.painel__topo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.painel__titulo {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.painel__periodo {
+  margin-top: 3px;
+  font-size: 13.5px;
+  color: var(--texto-suave);
+}
+
+.painel__controles {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* --- KPIs ----------------------------------------------------------- */
+
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.kpi {
+  padding: 22px 20px;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 14px;
+  box-shadow: var(--sombra-card);
+  backdrop-filter: blur(8px);
+}
+
+.kpi__valor {
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--texto);
+}
+
+@media (max-width: 640px) {
+  .kpi__valor {
+    font-size: 25px;
+  }
+}
+
+.kpi__rotulo {
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: var(--texto-suave);
+}
+
+/* --- Controles de gráfico ------------------------------------------- */
+
+.alternador {
+  display: flex;
+  padding: 3px;
+  border-radius: 9px;
+  background: rgba(26, 29, 35, 0.06);
+}
+
+.alternador__opcao {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--texto-suave);
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.16s ease, color 0.16s ease;
+}
+
+.alternador__opcao--ativa {
+  background: #fff;
+  color: var(--texto);
+  box-shadow: 0 1px 3px rgba(26, 29, 35, 0.12);
+}
+
+.navegador {
+  display: flex;
+  gap: 6px;
+}
+
+.navegador__seta {
+  padding: 7px 12px;
+  border: 1px solid rgba(26, 29, 35, 0.12);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--texto);
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.16s ease;
+}
+
+.navegador__seta:hover:not(:disabled) {
+  background: #fff;
+}
+
+.navegador__seta:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+.alternador__opcao:focus-visible,
+.navegador__seta:focus-visible {
+  outline: 2px solid var(--texto);
+  outline-offset: 2px;
+}
+
+/* --- Gráficos -------------------------------------------------------- */
+
+.grafico {
+  width: 100%;
+}
+
+.gb__balao {
+  padding: 9px 12px;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.97);
+  border: 1px solid rgba(26, 29, 35, 0.1);
+  box-shadow: var(--sombra-menu);
+}
+
+.gb__balao-rotulo {
+  font-size: 12.5px;
+  color: var(--texto-suave);
+  margin-bottom: 2px;
+}
+
+.gb__balao-valor {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--texto);
+}
+
+.pizzas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* O painel dentro da grade das pizzas não leva margem embaixo. */
+.pizzas .painel {
+  margin-bottom: 20px;
+}
+
+.legenda {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.legenda__item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 14px;
+}
+
+.legenda__cor {
+  width: 11px;
+  height: 11px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.legenda__nome {
+  color: var(--texto);
+}
+
+.legenda__valor {
+  margin-left: auto;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--texto);
+}
+
+/* --- Tabela ---------------------------------------------------------- */
+
+.tabela-rolagem {
+  overflow-x: auto;
+}
+
+.tabela {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14.5px;
+  white-space: nowrap;
+}
+
+.tabela th {
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--texto-suave);
+  border-bottom: 1px solid rgba(26, 29, 35, 0.12);
+}
+
+.tabela td {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(26, 29, 35, 0.07);
+  color: var(--texto);
+}
+
+.tabela tbody tr:hover td {
+  background: rgba(229, 57, 53, 0.045);
+}
+
+.tabela__num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.tabela__vazio {
+  padding: 28px 14px;
+  text-align: center;
+  color: var(--texto-suave);
+}
+
+.tabela tfoot td {
+  padding-top: 13px;
+  font-weight: 600;
+  color: var(--texto);
+  border-bottom: none;
+}
+
+/* --- Botões ---------------------------------------------------------- */
+
+.botao-secundario {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 15px;
+  border: 1px solid rgba(26, 29, 35, 0.14);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.75);
+  color: var(--texto);
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.16s ease;
+}
+
+.botao-secundario:hover:not(:disabled) {
+  background: #fff;
+}
+
+.botao-secundario:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+
+.botao-principal {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 9px;
+  background: var(--area-forte);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.16s ease;
+}
+
+.botao-principal:hover {
+  filter: brightness(1.08);
+}
+
+.botao-secundario:focus-visible,
+.botao-principal:focus-visible {
+  outline: 2px solid var(--texto);
+  outline-offset: 2px;
+}
+
+.contador {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 19px;
+  height: 19px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--area-forte);
+  color: #fff;
+  font-size: 11.5px;
+  font-weight: 700;
+}
+
+/* --- Drawer de filtros ------------------------------------------------ */
+
+.drawer__fundo {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(26, 29, 35, 0.34);
+  animation: drawer-fundo 0.18s ease-out;
+}
+
+@keyframes drawer-fundo {
+  from {
+    opacity: 0;
+  }
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 201;
+  width: 330px;
+  max-width: 88vw;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  box-shadow: -8px 0 30px rgba(26, 29, 35, 0.18);
+  animation: drawer-entra 0.2s ease-out;
+}
+
+@keyframes drawer-entra {
+  from {
+    transform: translateX(100%);
+  }
+}
+
+.drawer__topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid rgba(26, 29, 35, 0.09);
+}
+
+.drawer__titulo {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.drawer__fechar {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--texto-suave);
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.drawer__fechar:hover {
+  background: rgba(26, 29, 35, 0.07);
+  color: var(--texto);
+}
+
+.drawer__corpo {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 20px 20px;
+}
+
+.drawer__grupo {
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(26, 29, 35, 0.07);
+}
+
+.drawer__grupo:last-child {
+  border-bottom: none;
+}
+
+.drawer__grupo-titulo {
+  margin-bottom: 10px;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--texto-suave);
+}
+
+.drawer__opcao {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0;
+  font-size: 14.5px;
+  cursor: pointer;
+}
+
+.drawer__opcao input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--area-forte);
+  cursor: pointer;
+}
+
+.drawer__rodape {
+  display: flex;
+  gap: 10px;
+  padding: 16px 20px;
+  border-top: 1px solid rgba(26, 29, 35, 0.09);
+}
+
+.drawer__rodape .botao-secundario,
+.drawer__rodape .botao-principal {
+  flex: 1;
+  justify-content: center;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drawer,
+  .drawer__fundo {
+    animation: none;
+  }
+}
