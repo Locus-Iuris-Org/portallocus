@@ -5,6 +5,7 @@ import Cadastro from './pages/Cadastro'
 import EsqueciSenha from './pages/EsqueciSenha'
 import RedefinirSenha from './pages/RedefinirSenha'
 import Homepage from './pages/Homepage'
+import Perfil from './pages/Perfil'
 import Area from './pages/Area'
 import Dashboard from './pages/Dashboard'
 import EmConstrucao from './pages/EmConstrucao'
@@ -83,15 +84,7 @@ export default function App() {
 
           {/* Telas soltas que ainda não foram construídas. */}
           <Route path="/dashboard" element={protegida(<Dashboard />)} />
-          <Route
-            path="/perfil"
-            element={protegida(
-              <EmConstrucao
-                titulo="Meu perfil"
-                texto="Aqui você vai ver e editar seus dados de conta: nome, foto e senha."
-              />,
-            )}
-          />
+          <Route path="/perfil" element={protegida(<Perfil />)} />
           <Route
             path="/admin"
             element={protegida(

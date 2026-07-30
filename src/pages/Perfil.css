@@ -1,0 +1,272 @@
+/* Tela de Perfil — fundo branco limpo, acentos em dourado.
+   Não usa o gradiente das áreas de propósito: é uma tela de conta,
+   não de conteúdo do portal. */
+
+.perfil {
+  min-height: 100svh;
+  padding-top: var(--altura-header);
+  background: #fff;
+}
+
+.perfil__conteudo {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 40px 32px 96px;
+}
+
+@media (max-width: 640px) {
+  .perfil__conteudo {
+    padding: 28px 20px 64px;
+  }
+}
+
+/* O botão voltar herda .area__voltar do index.css, mas aqui o fundo é
+   branco: troca o vidro fosco por uma borda discreta. */
+.perfil .area__voltar {
+  background: #fff;
+  border-color: rgba(26, 29, 35, 0.14);
+  backdrop-filter: none;
+  box-shadow: none;
+}
+
+.perfil .area__voltar:hover {
+  background: rgba(26, 29, 35, 0.04);
+}
+
+/* --- Cabeçalho ------------------------------------------------------- */
+
+.perfil__cabecalho {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding-bottom: 32px;
+  margin-bottom: 32px;
+  border-bottom: 1px solid rgba(26, 29, 35, 0.1);
+}
+
+@media (max-width: 560px) {
+  .perfil__cabecalho {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+  }
+}
+
+.perfil__foto {
+  position: relative;
+  width: 104px;
+  height: 104px;
+  flex-shrink: 0;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--primaria);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: box-shadow 0.2s ease;
+}
+
+.perfil__foto:hover {
+  box-shadow: 0 0 0 5px rgba(212, 180, 41, 0.24);
+}
+
+.perfil__foto:focus-visible {
+  outline: 2px solid var(--texto);
+  outline-offset: 3px;
+}
+
+.perfil__foto:disabled {
+  cursor: wait;
+}
+
+.perfil__foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.perfil__iniciais {
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--texto);
+  letter-spacing: 0.02em;
+}
+
+/* Faixa "Trocar" que aparece na base da foto ao passar o mouse. */
+.perfil__foto-capa {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 7px 0;
+  background: rgba(26, 29, 35, 0.72);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.perfil__foto:hover .perfil__foto-capa,
+.perfil__foto:focus-visible .perfil__foto-capa,
+.perfil__foto:disabled .perfil__foto-capa {
+  opacity: 1;
+}
+
+.perfil__identificacao {
+  min-width: 0;
+}
+
+.perfil__nome {
+  font-size: 27px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+
+.perfil__email {
+  margin-top: 4px;
+  font-size: 14.5px;
+  color: var(--texto-suave);
+}
+
+.perfil__etiquetas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.etiqueta {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: rgba(212, 180, 41, 0.14);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--texto);
+}
+
+.etiqueta__rotulo {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #8a7318;
+}
+
+.perfil__nota {
+  margin-top: 10px;
+  font-size: 12.5px;
+  color: var(--texto-suave);
+}
+
+/* --- Cartões de formulário -------------------------------------------- */
+
+.cartao {
+  padding: 24px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(26, 29, 35, 0.11);
+  border-radius: 14px;
+  background: #fff;
+}
+
+.cartao__titulo {
+  font-size: 16.5px;
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--texto-suave);
+}
+
+.campo input {
+  padding: 11px 13px;
+  border: 1px solid rgba(26, 29, 35, 0.18);
+  border-radius: 9px;
+  font-family: inherit;
+  font-size: 15px;
+  color: var(--texto);
+  background: #fff;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.campo input:focus {
+  outline: none;
+  border-color: var(--primaria);
+  box-shadow: 0 0 0 3px rgba(212, 180, 41, 0.2);
+}
+
+.cartao__acoes {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.botao-dourado {
+  padding: 11px 22px;
+  border: none;
+  border-radius: 9px;
+  background: var(--primaria);
+  color: var(--texto);
+  font-size: 14.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.16s ease;
+}
+
+.botao-dourado:hover:not(:disabled) {
+  filter: brightness(1.07);
+}
+
+.botao-dourado:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.botao-dourado:focus-visible {
+  outline: 2px solid var(--texto);
+  outline-offset: 2px;
+}
+
+/* --- Avisos ------------------------------------------------------------ */
+
+.aviso {
+  padding: 11px 13px;
+  border-radius: 9px;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.aviso--ok {
+  background: rgba(12, 163, 12, 0.1);
+  color: #0a6b0a;
+}
+
+.aviso--erro {
+  background: rgba(180, 35, 31, 0.09);
+  color: #96201c;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .perfil__foto,
+  .perfil__foto-capa,
+  .campo input,
+  .botao-dourado {
+    transition: none;
+  }
+}
