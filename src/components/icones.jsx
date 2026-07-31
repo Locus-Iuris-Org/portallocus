@@ -129,6 +129,13 @@ export const ICONES = {
     </svg>
   ),
 
+  camera: (
+    <svg {...base}>
+      <path d="M3 8.8h3.4l1.6-2.4h8l1.6 2.4H21v9.6a1.6 1.6 0 0 1-1.6 1.6H4.6A1.6 1.6 0 0 1 3 18.4z" />
+      <circle cx="12" cy="13.4" r="3.4" />
+    </svg>
+  ),
+
   cadeado: (
     <svg {...base}>
       <rect x="4.5" y="10.5" width="15" height="9.5" rx="2.4" />

@@ -10,6 +10,9 @@ import './Perfil.css'
 
 const TAMANHO_MAXIMO = 2 * 1024 * 1024 // 2 MB
 const BUCKET = 'avatares'
+// Os mesmos tipos que o bucket aceita — conferir aqui dá uma mensagem
+// clara em vez de deixar o Supabase recusar lá na frente.
+const TIPOS_ACEITOS = ['image/png', 'image/jpeg', 'image/webp']
 
 function iniciaisDe(nome, email) {
   const partes = (nome || '').trim().split(/\s+/).filter(Boolean)
@@ -70,6 +73,8 @@ export default function Perfil() {
 
   // Foto
   const [enviandoFoto, setEnviandoFoto] = useState(false)
+  // Carimbo que troca a cada envio, só para furar o cache do navegador.
+  const [versaoFoto, setVersaoFoto] = useState(0)
 
   // Senha: escondida atrás do botão "Alterar senha".
   const [trocaAberta, setTrocaAberta] = useState(false)
@@ -191,8 +196,8 @@ export default function Perfil() {
 
     setAviso(null)
 
-    if (!arquivo.type.startsWith('image/')) {
-      setAviso({ tipo: 'erro', texto: 'Escolha um arquivo de imagem.' })
+    if (!TIPOS_ACEITOS.includes(arquivo.type)) {
+      setAviso({ tipo: 'erro', texto: 'A foto precisa ser PNG, JPG ou WEBP.' })
       return
     }
     if (arquivo.size > TAMANHO_MAXIMO) {
@@ -203,6 +208,9 @@ export default function Perfil() {
     setEnviandoFoto(true)
 
     // A pasta é o ID do usuário — é isso que a regra do bucket confere.
+    // O arquivo não tem extensão de propósito: com nome fixo, cada envio
+    // substitui o anterior em vez de deixar um PNG velho para trás
+    // quando a pessoa manda um JPG.
     const caminho = `${sessao.user.id}/avatar`
 
     const { error: erroUpload } = await supabase.storage
@@ -217,8 +225,7 @@ export default function Perfil() {
       console.error('Perfil: erro no upload ->', erroUpload.message)
       setAviso({
         tipo: 'erro',
-        texto:
-          'Não foi possível enviar a foto. Se o bucket "avatares" ainda não existe, rode o arquivo supabase/2026-07-30-perfil.sql.',
+        texto: `Não foi possível enviar a foto: ${erroUpload.message}`,
       })
       return
     }
@@ -227,24 +234,28 @@ export default function Perfil() {
       data: { publicUrl },
     } = supabase.storage.from(BUCKET).getPublicUrl(caminho)
 
-    // O ?v= força o navegador a buscar a imagem nova em vez da do cache.
-    const urlComVersao = `${publicUrl}?v=${Date.now()}`
-
-    const { error: erroSalvar } = await supabase.rpc('atualizar_meu_perfil', {
-      p_nome_completo: null,
-      p_telefone: telefone,
-      p_avatar_url: urlComVersao,
-    })
+    // Grava a URL limpa. O truque contra cache fica só na exibição —
+    // carimbar o endereço no banco deixaria a data velha lá para sempre.
+    const { error: erroSalvar } = await supabase
+      .from('usuarios')
+      .update({ avatar_url: publicUrl })
+      .eq('id', sessao.user.id)
 
     setEnviandoFoto(false)
 
     if (erroSalvar) {
       console.error('Perfil: erro ao salvar a foto ->', erroSalvar.message)
-      setAviso({ tipo: 'erro', texto: 'A foto subiu, mas não foi possível salvá-la no perfil.' })
+      setAviso({
+        tipo: 'erro',
+        texto: `A foto subiu, mas não foi possível salvá-la no perfil: ${erroSalvar.message}`,
+      })
       return
     }
 
-    setPerfil((atual) => ({ ...atual, avatar_url: urlComVersao }))
+    setPerfil((atual) => ({ ...atual, avatar_url: publicUrl }))
+    // Muda o carimbo para o navegador buscar a imagem nova em vez da
+    // que ele já tem em cache — o endereço em si não mudou.
+    setVersaoFoto(Date.now())
     setAviso({ tipo: 'ok', texto: 'Foto atualizada.' })
   }
 
@@ -289,6 +300,14 @@ export default function Perfil() {
   const cargoNome = perfil?.cargos?.nome || '—'
   const areaNome = perfil?.cargos?.area?.nome || '—'
 
+  // O endereço guardado no banco é limpo; o carimbo entra só aqui, para
+  // o navegador não mostrar a foto antiga logo depois de uma troca.
+  const urlDaFoto = perfil?.avatar_url
+    ? versaoFoto
+      ? `${perfil.avatar_url}?t=${versaoFoto}`
+      : perfil.avatar_url
+    : null
+
   return (
     <>
       <Header />
@@ -302,30 +321,45 @@ export default function Perfil() {
           {/* --- Cartão de identidade --- */}
           <section className="identidade">
             <div className="identidade__faixa">
-              <button
-                type="button"
-                className="perfil__foto"
-                onClick={() => inputFoto.current?.click()}
-                disabled={enviandoFoto}
-                aria-label="Trocar foto de perfil"
-              >
-                {perfil?.avatar_url ? (
-                  <img src={perfil.avatar_url} alt="" />
-                ) : (
-                  <span className="perfil__iniciais">
-                    {iniciaisDe(nomeExibido, email)}
-                  </span>
-                )}
+              <div className="perfil__foto-area">
+                <button
+                  type="button"
+                  className="perfil__foto"
+                  onClick={() => inputFoto.current?.click()}
+                  disabled={enviandoFoto}
+                  aria-label="Trocar foto de perfil"
+                >
+                  {urlDaFoto ? (
+                    <img src={urlDaFoto} alt="" />
+                  ) : (
+                    <span className="perfil__iniciais">
+                      {iniciaisDe(nomeExibido, email)}
+                    </span>
+                  )}
 
-                <span className="perfil__foto-capa">
-                  {enviandoFoto ? 'Enviando…' : 'Trocar'}
-                </span>
-              </button>
+                  {enviandoFoto && (
+                    <span className="perfil__foto-capa">Enviando…</span>
+                  )}
+                </button>
+
+                {/* Botão de câmera: fica sempre visível, inclusive no
+                    celular, onde não existe passar o mouse. */}
+                <button
+                  type="button"
+                  className="perfil__camera"
+                  onClick={() => inputFoto.current?.click()}
+                  disabled={enviandoFoto}
+                  aria-label="Alterar foto de perfil"
+                  title="Alterar foto"
+                >
+                  {ICONES.camera}
+                </button>
+              </div>
 
               <input
                 ref={inputFoto}
                 type="file"
-                accept="image/*"
+                accept={TIPOS_ACEITOS.join(',')}
                 onChange={enviarFoto}
                 hidden
               />

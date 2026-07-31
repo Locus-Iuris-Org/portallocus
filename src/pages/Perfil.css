@@ -66,6 +66,13 @@
 }
 
 
+/* Envolve a foto e o botão de câmera, que fica ancorado no canto. */
+.perfil__foto-area {
+  position: relative;
+  flex-shrink: 0;
+  line-height: 0;
+}
+
 .perfil__foto {
   position: relative;
   width: 132px;
@@ -126,7 +133,7 @@
   }
 }
 
-/* Faixa "Trocar" que aparece na base da foto ao passar o mouse. */
+/* Faixa "Enviando…" enquanto a imagem sobe. */
 .perfil__foto-capa {
   position: absolute;
   left: 0;
@@ -139,14 +146,59 @@
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  opacity: 0;
-  transition: opacity 0.2s ease;
 }
 
-.perfil__foto:hover .perfil__foto-capa,
-.perfil__foto:focus-visible .perfil__foto-capa,
-.perfil__foto:disabled .perfil__foto-capa {
-  opacity: 1;
+/* Botão de câmera no canto da foto. Fica sempre visível — no celular
+   não existe passar o mouse, então esconder no hover deixaria a troca
+   de foto sem nenhuma pista. */
+.perfil__camera {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: var(--primaria);
+  color: var(--texto);
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(26, 29, 35, 0.22);
+  transition: filter 0.16s ease, transform 0.16s ease;
+}
+
+.perfil__camera svg {
+  width: 19px;
+  height: 19px;
+}
+
+.perfil__camera:hover:not(:disabled) {
+  filter: brightness(1.08);
+  transform: scale(1.06);
+}
+
+.perfil__camera:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.perfil__camera:focus-visible {
+  outline: 2px solid var(--texto);
+  outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  .perfil__camera {
+    width: 34px;
+    height: 34px;
+  }
+  .perfil__camera svg {
+    width: 17px;
+    height: 17px;
+  }
 }
 
 .perfil__identificacao {
@@ -467,7 +519,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .perfil__foto,
-  .perfil__foto-capa,
+  .perfil__camera,
   .campo input,
   .botao-dourado,
   .botao-pequeno,
