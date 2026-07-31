@@ -46,15 +46,19 @@
   position: relative;
 }
 
+/* 44px numa barra de 64px: sobram 10px de folga em cima e embaixo, e o
+   anel de hover (4px) ainda cabe sem encostar nas bordas. */
 .header__avatar {
-  width: 38px;
-  height: 38px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   border: none;
   padding: 0;
+  overflow: hidden;
+  flex-shrink: 0;
   background: var(--primaria);
   color: var(--texto);
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
   letter-spacing: 0.02em;
   cursor: pointer;
@@ -62,6 +66,13 @@
   align-items: center;
   justify-content: center;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.header__avatar-foto {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .header__avatar:hover {

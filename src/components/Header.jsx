@@ -5,6 +5,17 @@ import { supabase } from '../lib/supabase'
 import './Header.css'
 
 /**
+ * Carimbo para furar o cache da foto, calculado UMA VEZ por
+ * carregamento da página.
+ *
+ * Não pode ser Date.now() na hora de desenhar: mudaria a cada
+ * redesenho e o navegador buscaria a imagem de novo toda vez, fazendo
+ * o avatar piscar. Assim, dentro da mesma página o endereço é estável,
+ * e um F5 traz a foto atual.
+ */
+const CARIMBO_DA_PAGINA = Date.now()
+
+/**
  * Monta as iniciais do avatar: "Davi Motta" -> "DM".
  * Cai no e-mail quando não há nome cadastrado.
  */
@@ -69,7 +80,15 @@ export default function Header() {
           aria-expanded={aberto}
           aria-label="Abrir menu da conta"
         >
-          {iniciaisDe(usuario)}
+          {usuario?.avatar_url ? (
+            <img
+              className="header__avatar-foto"
+              src={`${usuario.avatar_url}?t=${CARIMBO_DA_PAGINA}`}
+              alt=""
+            />
+          ) : (
+            iniciaisDe(usuario)
+          )}
         </button>
 
         {aberto && (
