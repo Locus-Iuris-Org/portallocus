@@ -178,10 +178,66 @@
   background: #fff;
 }
 
+.cartao__topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
 .cartao__titulo {
   font-size: 16.5px;
   font-weight: 600;
-  margin-bottom: 18px;
+}
+
+/* Dentro do formulário o título fica sozinho na linha, então o
+   espaçamento vem do .cartao__topo. */
+.cartao__topo .cartao__titulo {
+  margin-bottom: 0;
+}
+
+/* --- Lista de leitura (modo visualização) --- */
+
+.dados {
+  margin: 0;
+}
+
+.dados__linha {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 11px 0;
+  border-bottom: 1px solid rgba(26, 29, 35, 0.07);
+}
+
+.dados__linha:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.dados dt {
+  flex: 0 0 132px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--texto-suave);
+}
+
+.dados dd {
+  margin: 0;
+  font-size: 15px;
+  color: var(--texto);
+  word-break: break-word;
+}
+
+@media (max-width: 480px) {
+  .dados__linha {
+    flex-direction: column;
+    gap: 3px;
+  }
+  .dados dt {
+    flex: none;
+  }
 }
 
 .campo {
@@ -214,7 +270,57 @@
 .cartao__acoes {
   display: flex;
   justify-content: flex-end;
+  gap: 10px;
   margin-top: 20px;
+}
+
+/* Botão discreto do topo do cartão ("Editar", "Alterar senha").
+   Tem estilo próprio porque o .botao-secundario de aparência
+   parecida vive no Diretoria.css, que é carregado em outro pacote
+   e não chega até esta tela. */
+.botao-pequeno {
+  padding: 6px 13px;
+  border: 1px solid rgba(26, 29, 35, 0.16);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--texto);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.16s ease, border-color 0.16s ease;
+}
+
+.botao-pequeno:hover {
+  background: rgba(212, 180, 41, 0.12);
+  border-color: rgba(212, 180, 41, 0.55);
+}
+
+.botao-neutro {
+  padding: 11px 20px;
+  border: 1px solid rgba(26, 29, 35, 0.16);
+  border-radius: 9px;
+  background: #fff;
+  color: var(--texto);
+  font-size: 14.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.16s ease;
+}
+
+.botao-neutro:hover:not(:disabled) {
+  background: rgba(26, 29, 35, 0.05);
+}
+
+.botao-neutro:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.botao-pequeno:focus-visible,
+.botao-neutro:focus-visible {
+  outline: 2px solid var(--texto);
+  outline-offset: 2px;
 }
 
 .botao-dourado {
@@ -266,7 +372,9 @@
   .perfil__foto,
   .perfil__foto-capa,
   .campo input,
-  .botao-dourado {
+  .botao-dourado,
+  .botao-pequeno,
+  .botao-neutro {
     transition: none;
   }
 }

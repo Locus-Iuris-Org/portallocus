@@ -4,6 +4,7 @@ import Header from '../components/Header'
 import Carregando from '../components/Carregando'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../hooks/useAuth'
+import { formatarData } from '../formato'
 import './Perfil.css'
 
 const TAMANHO_MAXIMO = 2 * 1024 * 1024 // 2 MB
@@ -18,6 +19,26 @@ function iniciaisDe(nome, email) {
   return (email || '?').slice(0, 2).toUpperCase()
 }
 
+/**
+ * Tira da linha do banco só os campos que o formulário edita.
+ * Usada ao carregar a tela e ao cancelar a edição — por isso é uma
+ * função pura, longe do estado.
+ */
+function camposDe(linha) {
+  return {
+    nome: linha?.nome || '',
+    telefone: linha?.telefone || '',
+    // O banco devolve a data como 'AAAA-MM-DD', que é justamente o
+    // formato que o seletor de data do navegador espera.
+    aniversario: (linha?.aniversario || '').slice(0, 10),
+  }
+}
+
+/** Valor para o modo leitura: vazio vira travessão. */
+function ouTraco(valor) {
+  return valor?.trim() ? valor : '—'
+}
+
 export default function Perfil() {
   const { sessao, carregando: carregandoSessao } = useAuth()
   const inputFoto = useRef(null)
@@ -25,16 +46,20 @@ export default function Perfil() {
   const [perfil, setPerfil] = useState(null)
   const [carregando, setCarregando] = useState(true)
 
-  // Formulário de dados
+  // Dados pessoais: a seção abre em leitura e só vira formulário
+  // quando o usuário clica em "Editar".
+  const [editando, setEditando] = useState(false)
   const [nome, setNome] = useState('')
   const [telefone, setTelefone] = useState('')
+  const [aniversario, setAniversario] = useState('')
   const [salvando, setSalvando] = useState(false)
   const [aviso, setAviso] = useState(null)
 
   // Foto
   const [enviandoFoto, setEnviandoFoto] = useState(false)
 
-  // Senha
+  // Senha: escondida atrás do botão "Alterar senha".
+  const [trocaAberta, setTrocaAberta] = useState(false)
   const [senha, setSenha] = useState('')
   const [confirmarSenha, setConfirmarSenha] = useState('')
   const [trocandoSenha, setTrocandoSenha] = useState(false)
@@ -77,8 +102,10 @@ export default function Perfil() {
         setAviso({ tipo: 'erro', texto: 'Não foi possível carregar seu perfil.' })
       } else {
         setPerfil(data)
-        setNome(data.nome_completo || data.nome || '')
-        setTelefone(data.telefone || '')
+        const campos = camposDe(data)
+        setNome(campos.nome)
+        setTelefone(campos.telefone)
+        setAniversario(campos.aniversario)
       }
       setCarregando(false)
     }
@@ -100,14 +127,18 @@ export default function Perfil() {
 
     setSalvando(true)
 
+    // Campos em branco viram null, para combinar com o "—" da leitura.
+    const novos = {
+      nome: nome.trim(),
+      telefone: telefone.trim() || null,
+      aniversario: aniversario || null,
+    }
+
     // Grava direto na própria linha. O filtro por id garante que
     // ninguém escreve no perfil de outro.
     const { error } = await supabase
       .from('usuarios')
-      .update({
-        nome: nome.trim(),
-        telefone: telefone.trim() || null,
-      })
+      .update(novos)
       .eq('id', sessao.user.id)
 
     setSalvando(false)
@@ -118,12 +149,26 @@ export default function Perfil() {
       return
     }
 
-    setPerfil((atual) => ({
-      ...atual,
-      nome: nome.trim(),
-      telefone: telefone.trim() || null,
-    }))
+    setPerfil((atual) => ({ ...atual, ...novos }))
+    setEditando(false)
     setAviso({ tipo: 'ok', texto: 'Dados salvos.' })
+  }
+
+  function cancelarEdicao() {
+    // Devolve os campos ao que veio do banco, jogando fora o digitado.
+    const campos = camposDe(perfil)
+    setNome(campos.nome)
+    setTelefone(campos.telefone)
+    setAniversario(campos.aniversario)
+    setAviso(null)
+    setEditando(false)
+  }
+
+  function fecharTrocaDeSenha() {
+    setSenha('')
+    setConfirmarSenha('')
+    setAvisoSenha(null)
+    setTrocaAberta(false)
   }
 
   async function enviarFoto(evento) {
@@ -214,6 +259,7 @@ export default function Perfil() {
 
     setSenha('')
     setConfirmarSenha('')
+    setTrocaAberta(false)
     setAvisoSenha({ tipo: 'ok', texto: 'Senha alterada.' })
   }
 
@@ -291,75 +337,166 @@ export default function Perfil() {
             </div>
           </div>
 
-          {/* --- Dados pessoais --- */}
-          <form className="cartao" onSubmit={salvarDados}>
-            <h2 className="cartao__titulo">Dados pessoais</h2>
+          {/* --- Dados pessoais: leitura por padrão, edição sob pedido --- */}
+          {editando ? (
+            <form className="cartao" onSubmit={salvarDados}>
+              <div className="cartao__topo">
+                <h2 className="cartao__titulo">Dados pessoais</h2>
+              </div>
 
-            <label className="campo">
-              Nome completo
-              <input
-                type="text"
-                value={nome}
-                onChange={(e) => setNome(e.target.value)}
-                required
-              />
-            </label>
+              <label className="campo">
+                Nome completo
+                <input
+                  type="text"
+                  value={nome}
+                  onChange={(e) => setNome(e.target.value)}
+                  required
+                />
+              </label>
 
-            <label className="campo">
-              Telefone
-              <input
-                type="tel"
-                value={telefone}
-                onChange={(e) => setTelefone(e.target.value)}
-                placeholder="(11) 90000-0000"
-              />
-            </label>
+              <label className="campo">
+                Telefone
+                <input
+                  type="tel"
+                  value={telefone}
+                  onChange={(e) => setTelefone(e.target.value)}
+                  placeholder="(11) 90000-0000"
+                />
+              </label>
 
-            {aviso && <p className={`aviso aviso--${aviso.tipo}`}>{aviso.texto}</p>}
+              <label className="campo">
+                Aniversário
+                <input
+                  type="date"
+                  value={aniversario}
+                  onChange={(e) => setAniversario(e.target.value)}
+                />
+              </label>
 
-            <div className="cartao__acoes">
-              <button type="submit" className="botao-dourado" disabled={salvando}>
-                {salvando ? 'Salvando…' : 'Salvar alterações'}
-              </button>
-            </div>
-          </form>
+              {aviso && <p className={`aviso aviso--${aviso.tipo}`}>{aviso.texto}</p>}
 
-          {/* --- Senha --- */}
-          <form className="cartao" onSubmit={trocarSenha}>
-            <h2 className="cartao__titulo">Senha</h2>
+              <div className="cartao__acoes">
+                <button
+                  type="button"
+                  className="botao-neutro"
+                  onClick={cancelarEdicao}
+                  disabled={salvando}
+                >
+                  Cancelar
+                </button>
+                <button type="submit" className="botao-dourado" disabled={salvando}>
+                  {salvando ? 'Salvando…' : 'Salvar alterações'}
+                </button>
+              </div>
+            </form>
+          ) : (
+            <section className="cartao">
+              <div className="cartao__topo">
+                <h2 className="cartao__titulo">Dados pessoais</h2>
+                <button
+                  type="button"
+                  className="botao-pequeno"
+                  onClick={() => {
+                    setAviso(null)
+                    setEditando(true)
+                  }}
+                >
+                  Editar
+                </button>
+              </div>
 
-            <label className="campo">
-              Nova senha
-              <input
-                type="password"
-                value={senha}
-                onChange={(e) => setSenha(e.target.value)}
-                autoComplete="new-password"
-                required
-              />
-            </label>
+              <dl className="dados">
+                <div className="dados__linha">
+                  <dt>Nome completo</dt>
+                  <dd>{ouTraco(perfil?.nome)}</dd>
+                </div>
+                <div className="dados__linha">
+                  <dt>Telefone</dt>
+                  <dd>{ouTraco(perfil?.telefone)}</dd>
+                </div>
+                <div className="dados__linha">
+                  <dt>Aniversário</dt>
+                  <dd>
+                    {perfil?.aniversario
+                      ? formatarData(perfil.aniversario.slice(0, 10))
+                      : '—'}
+                  </dd>
+                </div>
+              </dl>
 
-            <label className="campo">
-              Confirmar nova senha
-              <input
-                type="password"
-                value={confirmarSenha}
-                onChange={(e) => setConfirmarSenha(e.target.value)}
-                autoComplete="new-password"
-                required
-              />
-            </label>
+              {aviso && <p className={`aviso aviso--${aviso.tipo}`}>{aviso.texto}</p>}
+            </section>
+          )}
 
-            {avisoSenha && (
-              <p className={`aviso aviso--${avisoSenha.tipo}`}>{avisoSenha.texto}</p>
-            )}
+          {/* --- Senha: os campos só aparecem quando pedidos --- */}
+          {trocaAberta ? (
+            <form className="cartao" onSubmit={trocarSenha}>
+              <div className="cartao__topo">
+                <h2 className="cartao__titulo">Senha</h2>
+              </div>
 
-            <div className="cartao__acoes">
-              <button type="submit" className="botao-dourado" disabled={trocandoSenha}>
-                {trocandoSenha ? 'Alterando…' : 'Alterar senha'}
-              </button>
-            </div>
-          </form>
+              <label className="campo">
+                Nova senha
+                <input
+                  type="password"
+                  value={senha}
+                  onChange={(e) => setSenha(e.target.value)}
+                  autoComplete="new-password"
+                  required
+                />
+              </label>
+
+              <label className="campo">
+                Confirmar nova senha
+                <input
+                  type="password"
+                  value={confirmarSenha}
+                  onChange={(e) => setConfirmarSenha(e.target.value)}
+                  autoComplete="new-password"
+                  required
+                />
+              </label>
+
+              {avisoSenha && (
+                <p className={`aviso aviso--${avisoSenha.tipo}`}>{avisoSenha.texto}</p>
+              )}
+
+              <div className="cartao__acoes">
+                <button
+                  type="button"
+                  className="botao-neutro"
+                  onClick={fecharTrocaDeSenha}
+                  disabled={trocandoSenha}
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="botao-dourado"
+                  disabled={trocandoSenha}
+                >
+                  {trocandoSenha ? 'Alterando…' : 'Confirmar nova senha'}
+                </button>
+              </div>
+            </form>
+          ) : (
+            <section className="cartao">
+              <div className="cartao__topo">
+                <h2 className="cartao__titulo">Senha</h2>
+                <button
+                  type="button"
+                  className="botao-pequeno"
+                  onClick={() => setTrocaAberta(true)}
+                >
+                  Alterar senha
+                </button>
+              </div>
+
+              {avisoSenha && (
+                <p className={`aviso aviso--${avisoSenha.tipo}`}>{avisoSenha.texto}</p>
+              )}
+            </section>
+          )}
         </div>
       </main>
     </>
