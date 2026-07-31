@@ -65,17 +65,6 @@
   }
 }
 
-.identidade__nota {
-  padding: 20px 36px;
-  font-size: 14px;
-  color: var(--texto-suave);
-}
-
-@media (max-width: 640px) {
-  .identidade__nota {
-    padding: 18px 22px;
-  }
-}
 
 .perfil__foto {
   position: relative;

@@ -350,10 +350,6 @@ export default function Perfil() {
                 </div>
               </div>
             </div>
-
-            <p className="identidade__nota">
-              Cargo e área são definidos pelo administrador do portal.
-            </p>
           </section>
 
           {/* --- Dados pessoais: leitura por padrão, edição sob pedido --- */}
