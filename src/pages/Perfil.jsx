@@ -414,7 +414,7 @@ export default function Perfil() {
               </label>
 
               <label className="campo">
-                Aniversário
+                Data de nascimento
                 <input
                   type="date"
                   value={aniversario}
@@ -460,7 +460,7 @@ export default function Perfil() {
                 <Linha icone="telefone" rotulo="Telefone" valor={perfil?.telefone} />
                 <Linha
                   icone="calendario"
-                  rotulo="Aniversário"
+                  rotulo="Data de nascimento"
                   valor={
                     perfil?.aniversario
                       ? formatarData(perfil.aniversario.slice(0, 10))
