@@ -92,4 +92,47 @@ export const ICONES = {
       <path d="M12 7v5l3.5 2" />
     </svg>
   ),
+
+  /* --- Usados na tela de Perfil --- */
+
+  envelope: (
+    <svg {...base}>
+      <rect x="3" y="5.5" width="18" height="13" rx="2.5" />
+      <path d="M3.6 7l7.3 5.4a2 2 0 0 0 2.2 0L20.4 7" />
+    </svg>
+  ),
+
+  pessoa: (
+    <svg {...base}>
+      <circle cx="12" cy="8" r="3.6" />
+      <path d="M5 20v-1a4.2 4.2 0 0 1 4.2-4.2h5.6A4.2 4.2 0 0 1 19 19v1" />
+    </svg>
+  ),
+
+  telefone: (
+    <svg {...base}>
+      <path d="M6.4 3.6h3l1.5 3.8-2 1.4a12 12 0 0 0 5.3 5.3l1.4-2 3.8 1.5v3a1.8 1.8 0 0 1-2 1.8A16.4 16.4 0 0 1 4.6 5.6a1.8 1.8 0 0 1 1.8-2z" />
+    </svg>
+  ),
+
+  calendario: (
+    <svg {...base}>
+      <rect x="3.5" y="5" width="17" height="15" rx="2.5" />
+      <path d="M3.5 9.6h17M8.5 3.4v3.2M15.5 3.4v3.2" />
+    </svg>
+  ),
+
+  lapis: (
+    <svg {...base}>
+      <path d="M4 20h4l10.2-10.2a2.4 2.4 0 0 0-3.4-3.4L4.6 16.6z" />
+      <path d="M14 7.4l3 3" />
+    </svg>
+  ),
+
+  cadeado: (
+    <svg {...base}>
+      <rect x="4.5" y="10.5" width="15" height="9.5" rx="2.4" />
+      <path d="M8.2 10.5V7.8a3.8 3.8 0 0 1 7.6 0v2.7" />
+    </svg>
+  ),
 }

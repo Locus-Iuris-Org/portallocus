@@ -1,64 +1,91 @@
-/* Tela de Perfil — fundo branco limpo, acentos em dourado.
-   Não usa o gradiente das áreas de propósito: é uma tela de conta,
-   não de conteúdo do portal. */
+/* Tela de Perfil — cartões brancos sobre um fundo quase branco,
+   acentos no dourado da marca. Não usa o gradiente das áreas de
+   propósito: é uma tela de conta, não de conteúdo do portal. */
 
 .perfil {
   min-height: 100svh;
   padding-top: var(--altura-header);
-  background: #fff;
+  /* Off-white de propósito: em branco puro os cartões brancos
+     desapareceriam no fundo. */
+  background: #faf9f7;
 }
 
 .perfil__conteudo {
-  max-width: 680px;
+  max-width: 920px;
   margin: 0 auto;
   padding: 40px 32px 96px;
 }
 
 @media (max-width: 640px) {
   .perfil__conteudo {
-    padding: 28px 20px 64px;
+    padding: 28px 18px 64px;
   }
 }
 
-/* O botão voltar herda .area__voltar do index.css, mas aqui o fundo é
-   branco: troca o vidro fosco por uma borda discreta. */
+/* O botão voltar herda .area__voltar do index.css; aqui vira branco
+   sólido com borda discreta, no lugar do vidro fosco. */
 .perfil .area__voltar {
   background: #fff;
-  border-color: rgba(26, 29, 35, 0.14);
+  border-color: rgba(26, 29, 35, 0.12);
   backdrop-filter: none;
-  box-shadow: none;
+  box-shadow: 0 1px 2px rgba(26, 29, 35, 0.05);
 }
 
 .perfil .area__voltar:hover {
   background: rgba(26, 29, 35, 0.04);
 }
 
-/* --- Cabeçalho ------------------------------------------------------- */
+/* --- Cartão de identidade --------------------------------------------- */
 
-.perfil__cabecalho {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  padding-bottom: 32px;
-  margin-bottom: 32px;
-  border-bottom: 1px solid rgba(26, 29, 35, 0.1);
+.identidade {
+  margin-bottom: 22px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(26, 29, 35, 0.06),
+    0 6px 20px rgba(26, 29, 35, 0.05);
+  /* O fio dourado do topo é a borda de cima do próprio cartão. */
+  border-top: 4px solid var(--primaria);
 }
 
-@media (max-width: 560px) {
-  .perfil__cabecalho {
+.identidade__faixa {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  padding: 32px 36px;
+  background: var(--creme);
+}
+
+@media (max-width: 640px) {
+  .identidade__faixa {
     flex-direction: column;
     align-items: flex-start;
-    gap: 18px;
+    gap: 20px;
+    padding: 26px 22px;
+  }
+}
+
+.identidade__nota {
+  padding: 20px 36px;
+  font-size: 14px;
+  color: var(--texto-suave);
+}
+
+@media (max-width: 640px) {
+  .identidade__nota {
+    padding: 18px 22px;
   }
 }
 
 .perfil__foto {
   position: relative;
-  width: 104px;
-  height: 104px;
+  width: 132px;
+  height: 132px;
   flex-shrink: 0;
   padding: 0;
-  border: none;
+  /* Anel branco + sombra dão a sensação de a foto estar assentada
+     sobre a faixa creme. */
+  border: 5px solid #fff;
   border-radius: 50%;
   overflow: hidden;
   background: var(--primaria);
@@ -66,11 +93,20 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 4px 14px rgba(26, 29, 35, 0.14);
   transition: box-shadow 0.2s ease;
 }
 
+@media (max-width: 640px) {
+  .perfil__foto {
+    width: 104px;
+    height: 104px;
+  }
+}
+
 .perfil__foto:hover {
-  box-shadow: 0 0 0 5px rgba(212, 180, 41, 0.24);
+  box-shadow: 0 4px 14px rgba(26, 29, 35, 0.14),
+    0 0 0 5px rgba(212, 180, 41, 0.3);
 }
 
 .perfil__foto:focus-visible {
@@ -89,10 +125,16 @@
 }
 
 .perfil__iniciais {
-  font-size: 32px;
-  font-weight: 600;
+  font-size: 40px;
+  font-weight: 700;
   color: var(--texto);
   letter-spacing: 0.02em;
+}
+
+@media (max-width: 640px) {
+  .perfil__iniciais {
+    font-size: 32px;
+  }
 }
 
 /* Faixa "Trocar" que aparece na base da foto ao passar o mouse. */
@@ -123,59 +165,83 @@
 }
 
 .perfil__nome {
-  font-size: 27px;
-  font-weight: 600;
-  letter-spacing: -0.025em;
-  line-height: 1.15;
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.12;
+}
+
+@media (max-width: 640px) {
+  .perfil__nome {
+    font-size: 27px;
+  }
 }
 
 .perfil__email {
-  margin-top: 4px;
-  font-size: 14.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  font-size: 15.5px;
   color: var(--texto-suave);
+  word-break: break-all;
+}
+
+.perfil__email-icone {
+  display: flex;
+  flex-shrink: 0;
+  color: var(--texto-suave);
+}
+
+.perfil__email-icone svg {
+  width: 17px;
+  height: 17px;
 }
 
 .perfil__etiquetas {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 14px;
+  gap: 10px;
+  margin-top: 18px;
 }
 
+/* Pílulas brancas sobre a faixa creme. */
 .etiqueta {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  padding: 6px 12px;
-  border-radius: 8px;
-  background: rgba(212, 180, 41, 0.14);
-  font-size: 13.5px;
-  font-weight: 500;
+  gap: 9px;
+  padding: 9px 17px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(26, 29, 35, 0.09);
+  font-size: 14.5px;
+  font-weight: 600;
   color: var(--texto);
 }
 
 .etiqueta__rotulo {
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 700;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
   color: #8a7318;
-}
-
-.perfil__nota {
-  margin-top: 10px;
-  font-size: 12.5px;
-  color: var(--texto-suave);
 }
 
 /* --- Cartões de formulário -------------------------------------------- */
 
 .cartao {
-  padding: 24px;
-  margin-bottom: 20px;
-  border: 1px solid rgba(26, 29, 35, 0.11);
-  border-radius: 14px;
+  padding: 30px 36px;
+  margin-bottom: 22px;
+  border-radius: 16px;
   background: #fff;
+  box-shadow: 0 1px 2px rgba(26, 29, 35, 0.06),
+    0 6px 20px rgba(26, 29, 35, 0.05);
+}
+
+@media (max-width: 640px) {
+  .cartao {
+    padding: 24px 22px;
+  }
 }
 
 .cartao__topo {
@@ -183,12 +249,18 @@
   align-items: center;
   justify-content: space-between;
   gap: 14px;
-  margin-bottom: 18px;
+  margin-bottom: 24px;
 }
 
 .cartao__titulo {
-  font-size: 16.5px;
+  font-size: 21px;
   font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.cartao__apoio {
+  font-size: 14.5px;
+  color: var(--texto-suave);
 }
 
 /* Dentro do formulário o título fica sozinho na linha, então o
@@ -205,10 +277,10 @@
 
 .dados__linha {
   display: flex;
-  align-items: baseline;
-  gap: 16px;
-  padding: 11px 0;
-  border-bottom: 1px solid rgba(26, 29, 35, 0.07);
+  align-items: center;
+  gap: 24px;
+  padding: 19px 0;
+  border-bottom: 1px solid rgba(26, 29, 35, 0.08);
 }
 
 .dados__linha:last-child {
@@ -216,27 +288,50 @@
   padding-bottom: 0;
 }
 
-.dados dt {
-  flex: 0 0 132px;
-  font-size: 13.5px;
-  font-weight: 500;
+.dados__rotulo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 0 0 250px;
+  font-size: 15.5px;
+  font-weight: 400;
   color: var(--texto-suave);
 }
 
-.dados dd {
+.dados__icone {
+  display: flex;
+  flex-shrink: 0;
+  color: #9a9aa2;
+}
+
+.dados__icone svg {
+  width: 18px;
+  height: 18px;
+}
+
+.dados__valor {
   margin: 0;
-  font-size: 15px;
+  font-size: 16px;
+  font-weight: 500;
   color: var(--texto);
   word-break: break-word;
 }
 
-@media (max-width: 480px) {
+.dados__valor--vazio {
+  font-weight: 400;
+  color: #a5a5ad;
+}
+
+@media (max-width: 560px) {
   .dados__linha {
     flex-direction: column;
-    gap: 3px;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 15px 0;
   }
-  .dados dt {
+  .dados__rotulo {
     flex: none;
+    font-size: 14px;
   }
 }
 
@@ -279,12 +374,15 @@
    parecida vive no Diretoria.css, que é carregado em outro pacote
    e não chega até esta tela. */
 .botao-pequeno {
-  padding: 6px 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 19px;
   border: 1px solid rgba(26, 29, 35, 0.16);
-  border-radius: 8px;
+  border-radius: 10px;
   background: #fff;
   color: var(--texto);
-  font-size: 13px;
+  font-size: 14.5px;
   font-weight: 500;
   cursor: pointer;
   white-space: nowrap;
@@ -294,6 +392,16 @@
 .botao-pequeno:hover {
   background: rgba(212, 180, 41, 0.12);
   border-color: rgba(212, 180, 41, 0.55);
+}
+
+.botao-pequeno__icone {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.botao-pequeno__icone svg {
+  width: 17px;
+  height: 17px;
 }
 
 .botao-neutro {

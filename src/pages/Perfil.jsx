@@ -4,6 +4,7 @@ import Header from '../components/Header'
 import Carregando from '../components/Carregando'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../hooks/useAuth'
+import { ICONES } from '../components/icones'
 import { formatarData } from '../formato'
 import './Perfil.css'
 
@@ -34,9 +35,21 @@ function camposDe(linha) {
   }
 }
 
-/** Valor para o modo leitura: vazio vira travessão. */
-function ouTraco(valor) {
-  return valor?.trim() ? valor : '—'
+/** Uma linha do modo leitura: ícone + rótulo à esquerda, valor à direita. */
+function Linha({ icone, rotulo, valor }) {
+  const vazio = !valor?.trim()
+
+  return (
+    <div className="dados__linha">
+      <dt className="dados__rotulo">
+        <span className="dados__icone">{ICONES[icone]}</span>
+        {rotulo}
+      </dt>
+      <dd className={`dados__valor${vazio ? ' dados__valor--vazio' : ''}`}>
+        {vazio ? 'Não informado' : valor}
+      </dd>
+    </div>
+  )
 }
 
 export default function Perfil() {
@@ -286,56 +299,62 @@ export default function Perfil() {
             <span aria-hidden="true">←</span> Voltar
           </Link>
 
-          {/* --- Cabeçalho --- */}
-          <div className="perfil__cabecalho">
-            <button
-              type="button"
-              className="perfil__foto"
-              onClick={() => inputFoto.current?.click()}
-              disabled={enviandoFoto}
-              aria-label="Trocar foto de perfil"
-            >
-              {perfil?.avatar_url ? (
-                <img src={perfil.avatar_url} alt="" />
-              ) : (
-                <span className="perfil__iniciais">
-                  {iniciaisDe(nomeExibido, email)}
+          {/* --- Cartão de identidade --- */}
+          <section className="identidade">
+            <div className="identidade__faixa">
+              <button
+                type="button"
+                className="perfil__foto"
+                onClick={() => inputFoto.current?.click()}
+                disabled={enviandoFoto}
+                aria-label="Trocar foto de perfil"
+              >
+                {perfil?.avatar_url ? (
+                  <img src={perfil.avatar_url} alt="" />
+                ) : (
+                  <span className="perfil__iniciais">
+                    {iniciaisDe(nomeExibido, email)}
+                  </span>
+                )}
+
+                <span className="perfil__foto-capa">
+                  {enviandoFoto ? 'Enviando…' : 'Trocar'}
                 </span>
-              )}
+              </button>
 
-              <span className="perfil__foto-capa">
-                {enviandoFoto ? 'Enviando…' : 'Trocar'}
-              </span>
-            </button>
+              <input
+                ref={inputFoto}
+                type="file"
+                accept="image/*"
+                onChange={enviarFoto}
+                hidden
+              />
 
-            <input
-              ref={inputFoto}
-              type="file"
-              accept="image/*"
-              onChange={enviarFoto}
-              hidden
-            />
+              <div className="perfil__identificacao">
+                <h1 className="perfil__nome">{nomeExibido}</h1>
 
-            <div className="perfil__identificacao">
-              <h1 className="perfil__nome">{nomeExibido}</h1>
-              <p className="perfil__email">{email}</p>
+                <p className="perfil__email">
+                  <span className="perfil__email-icone">{ICONES.envelope}</span>
+                  {email}
+                </p>
 
-              <div className="perfil__etiquetas">
-                <span className="etiqueta">
-                  <span className="etiqueta__rotulo">Cargo</span>
-                  {cargoNome}
-                </span>
-                <span className="etiqueta">
-                  <span className="etiqueta__rotulo">Área</span>
-                  {areaNome}
-                </span>
+                <div className="perfil__etiquetas">
+                  <span className="etiqueta">
+                    <span className="etiqueta__rotulo">Cargo</span>
+                    {cargoNome}
+                  </span>
+                  <span className="etiqueta">
+                    <span className="etiqueta__rotulo">Área</span>
+                    {areaNome}
+                  </span>
+                </div>
               </div>
-
-              <p className="perfil__nota">
-                Cargo e área são definidos pelo administrador do portal.
-              </p>
             </div>
-          </div>
+
+            <p className="identidade__nota">
+              Cargo e área são definidos pelo administrador do portal.
+            </p>
+          </section>
 
           {/* --- Dados pessoais: leitura por padrão, edição sob pedido --- */}
           {editando ? (
@@ -401,27 +420,23 @@ export default function Perfil() {
                     setEditando(true)
                   }}
                 >
+                  <span className="botao-pequeno__icone">{ICONES.lapis}</span>
                   Editar
                 </button>
               </div>
 
               <dl className="dados">
-                <div className="dados__linha">
-                  <dt>Nome completo</dt>
-                  <dd>{ouTraco(perfil?.nome)}</dd>
-                </div>
-                <div className="dados__linha">
-                  <dt>Telefone</dt>
-                  <dd>{ouTraco(perfil?.telefone)}</dd>
-                </div>
-                <div className="dados__linha">
-                  <dt>Aniversário</dt>
-                  <dd>
-                    {perfil?.aniversario
+                <Linha icone="pessoa" rotulo="Nome completo" valor={perfil?.nome} />
+                <Linha icone="telefone" rotulo="Telefone" valor={perfil?.telefone} />
+                <Linha
+                  icone="calendario"
+                  rotulo="Aniversário"
+                  valor={
+                    perfil?.aniversario
                       ? formatarData(perfil.aniversario.slice(0, 10))
-                      : '—'}
-                  </dd>
-                </div>
+                      : ''
+                  }
+                />
               </dl>
 
               {aviso && <p className={`aviso aviso--${aviso.tipo}`}>{aviso.texto}</p>}
@@ -488,9 +503,14 @@ export default function Perfil() {
                   className="botao-pequeno"
                   onClick={() => setTrocaAberta(true)}
                 >
+                  <span className="botao-pequeno__icone">{ICONES.cadeado}</span>
                   Alterar senha
                 </button>
               </div>
+
+              <p className="cartao__apoio">
+                Mantenha o acesso à sua conta protegido.
+              </p>
 
               {avisoSenha && (
                 <p className={`aviso aviso--${avisoSenha.tipo}`}>{avisoSenha.texto}</p>
