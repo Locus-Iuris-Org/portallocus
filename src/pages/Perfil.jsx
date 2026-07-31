@@ -100,28 +100,27 @@ export default function Perfil() {
 
     setSalvando(true)
 
-    // Escreve pela função do banco, que só toca nome/telefone/foto.
-    const { error } = await supabase.rpc('atualizar_meu_perfil', {
-      p_nome_completo: nome,
-      p_telefone: telefone,
-      p_avatar_url: null,
-    })
+    // Grava direto na própria linha. O filtro por id garante que
+    // ninguém escreve no perfil de outro.
+    const { error } = await supabase
+      .from('usuarios')
+      .update({
+        nome: nome.trim(),
+        telefone: telefone.trim() || null,
+      })
+      .eq('id', sessao.user.id)
 
     setSalvando(false)
 
     if (error) {
       console.error('Perfil: erro ao salvar ->', error.message)
-      setAviso({
-        tipo: 'erro',
-        texto:
-          'Não foi possível salvar. Se a função atualizar_meu_perfil ainda não foi criada no Supabase, rode o arquivo supabase/2026-07-30-perfil.sql.',
-      })
+      setAviso({ tipo: 'erro', texto: `Não foi possível salvar: ${error.message}` })
       return
     }
 
     setPerfil((atual) => ({
       ...atual,
-      nome_completo: nome.trim(),
+      nome: nome.trim(),
       telefone: telefone.trim() || null,
     }))
     setAviso({ tipo: 'ok', texto: 'Dados salvos.' })
